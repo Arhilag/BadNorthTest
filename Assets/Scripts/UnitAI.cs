@@ -8,6 +8,7 @@ public class UnitAI : AIObject
     [SerializeField] private SeeModule _seeModule;
     [SerializeField] private FightModule _fightModule;
     [SerializeField] private NavMeshAgent _navMesh;
+    [SerializeField] private Animator _animator;
     [SerializeField] private float _maxFightDistance = 0.3f;
     [SerializeField] private float _coroutineFrequency = 0.2f;
 
@@ -106,6 +107,8 @@ public class UnitAI : AIObject
                 break;
             }
             _targetAI.TakeDamage(_attack);
+            _animator.ResetTrigger("Attack");
+            _animator.SetTrigger("Attack");
             yield return new WaitForSeconds(_attackSpeed);
         }
     }
@@ -135,5 +138,11 @@ public class UnitAI : AIObject
     public void EnableNavMesh(bool flag)
     {
         _navMesh.enabled = flag;
+    }
+
+    private void FixedUpdate()
+    {
+        float speed = _navMesh.velocity.magnitude;
+        _animator.SetFloat("Speed", speed);
     }
 }
